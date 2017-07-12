@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.4</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Elements\" />
+    <Folder Include="Base\" />
+    <Folder Include="Elements\Panels\" />
+    <Folder Include="Elements\Display\" />
+    <Folder Include="Elements\Controls\" />
+    <Folder Include="Bindings\" />
+  </ItemGroup>
+</Project>

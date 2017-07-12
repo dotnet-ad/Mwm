@@ -1,0 +1,26 @@
+﻿<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <UsingTask TaskName="Mwm.UI.Xaml.Build.MwmXamlTask" AssemblyFile="Mwm.UI.Xaml.Build.dll"/>
+
+  <Target Name="CollectMwmXaml" BeforeTargets="MwmXaml">
+    <ItemGroup>
+     <MwmXamlFiles Include="@(None)" Condition="'%(Extension)' == '.xaml'"/>
+    </ItemGroup>
+  </Target>
+	
+  <Target Name="MwmXaml" BeforeTargets="CollectGeneratedMwmXaml" Inputs = "@(MwmXamlFiles)" Outputs = "$(IntermediateOutputPath)%(Identity).g.cs">
+    <Message Text="Starting XAML generation ..." Importance="normal"/>
+    <MwmXamlTask
+        Source="@(MwmXamlFiles)"
+        AssemblyName = "$(AssemblyName)"
+        OutputFile = "$(IntermediateOutputPath)%(Identity).g.cs">
+    </MwmXamlTask>
+  </Target>
+
+  <Target Name="CollectGeneratedMwmXaml" BeforeTargets="BeforeBuild">
+      <ItemGroup>
+        <Compile Include="$(IntermediateOutputPath)**\*.xaml.g.cs" />
+      </ItemGroup>
+  </Target>
+	
+</Project>

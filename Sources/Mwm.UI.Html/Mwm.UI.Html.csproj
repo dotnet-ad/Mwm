@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.4</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Mwm.UI\Mwm.UI.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Json\" />
+    <Folder Include="Content\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Content\mwm.js" />
+    <None Remove="Content\mwwm.html" />
+    <None Remove="Content\mwm.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\mwm.js" />
+    <EmbeddedResource Include="Content\mwwm.html" />
+    <EmbeddedResource Include="Content\mwm.css" />
+  </ItemGroup>
+</Project>

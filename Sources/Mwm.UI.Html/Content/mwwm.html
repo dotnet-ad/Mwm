@@ -1,0 +1,19 @@
+﻿<html>
+    <head>
+        <link rel="stylesheet" href="mwm.css" />
+        <script src="mwm.js"></script>
+    </head>
+    <body>
+        <div id="app"></div>
+        <script>
+            var scheme = document.location.protocol == "https:" ? "wss" : "ws";
+            var port = document.location.port ? (":" + document.location.port) : "";
+            var url = scheme + "://" + document.location.hostname + port + "/mwm/socket" ;
+
+            var mwm = new Mwm("app");
+            mwm.start(url);
+
+            mwm.navigate("{{initial}}");
+        </script>
+    </body>
+</html>
