@@ -86,7 +86,7 @@ class Element {
         var node = document.createElement(tag);
         node.id = this.Identifier;
         node.visibility = this.Visibility;
-        node.classList.add(this.constructor.name)
+        node.classList.add(this.constructor.name);
         node.style.cssText += "margin:" + this.Margin + ";";
         if(this.Width >= 0) node.style.cssText += "width:" + toDimension(this.Width);
         if(this.Height >= 0) node.style.cssText += "height:" + toDimension(this.Height);
@@ -365,6 +365,67 @@ class TextBox extends Control {
         node.innerHTML = this.Text;
         node.oninput = function () {
             self.raiseEvent("TextChanged", this.value);
+        }
+        return node;
+    }
+}
+
+class ToggleSwitch extends Control {
+    constructor(values) {
+        super(values);
+        this.Foreground = values.Foreground;  // TODO
+        this.IsOn = values.IsOn;
+
+        this.updaters.Foreground = function(n,v) { }; // TODO
+        this.updaters.IsEnabled = function(n,v) { 
+            var input = n.firstChild;
+            input.disabled = !v; 
+        };
+        this.updaters.IsOn = function(n,v) { 
+            var input = n.firstChild;
+            input.checked = v; 
+        };
+    }
+
+    createDOM() {
+        var self = this;
+        var node = super.createDOM("label");
+       
+        //node.style.cssText += "border-left-width:" + borders[3] + ";";
+
+        var input = document.createElement("input");
+        input.type = "checkbox";
+        input.checked = this.IsOn; 
+        input.disabled = !this.IsEnabled;
+        input.onchange = function (cb) {
+            self.raiseEvent("IsOnChanged", "" + cb.srcElement.checked);
+        }
+        node.appendChild(input);
+
+        var span = document.createElement("span");
+        node.appendChild(span);
+     
+        return node;
+    }
+}
+
+class Slider extends Control {
+    constructor(values) {
+        super(values);
+        this.Foreground = values.Foreground;  // TODO
+        this.Value = values.Value;
+
+        this.updaters.Foreground = function(n,v) { }; // TODO
+        this.updaters.Value = function(n,v) { input.value = v; };
+    }
+
+    createDOM() {
+        var self = this;
+        var node = super.createDOM("input");
+        node.type = "range";
+        node.value = this.Value;
+        node.onchange = function (cb) {
+            self.raiseEvent("ValueChanged", "" + this.value);
         }
         return node;
     }

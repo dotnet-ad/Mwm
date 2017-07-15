@@ -1,4 +1,6 @@
-﻿namespace Mwm.UI
+﻿using System.Collections.Generic;
+using System.Reflection;
+namespace Mwm.UI
 {
 	using System;
 	using System.ComponentModel;
@@ -25,10 +27,24 @@
 
 		int Height { get; set; }
 
+		#region Bindings
+
 		void Bind(string toProperty, string fromContextProperty, IValueConverter converter = null);
 
 		void BindTwoWay(string toProperty, string fromContextProperty, IValueConverter converter = null);
 
 		void UpdateBindings();
+
+		#endregion
+
+		#region Attached
+
+		IDictionary<PropertyInfo, object> AttachedProperties { get; }
+
+		void SetAttachedProperty(PropertyInfo info, object value);
+
+		object GetAttachedProperty(PropertyInfo info);
+
+		#endregion
 	}
 }
