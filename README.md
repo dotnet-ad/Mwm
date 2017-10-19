@@ -6,7 +6,7 @@ Build web interfaces with XAML markup language and bind it to the same view mode
 
 **Mwm** is purely **experimental**. It's absolutely not thought to be production-ready, this is more a proof-of-concept of a naïve implementation on top of [ASP.NET Core](https://www.asp.net/core/overview/aspnet-vnext) and [Websockets](https://developer.mozilla.org/fr/docs/WebSockets).
 
-It's just me having fun with technologies I don't know yet! :)
+To sumarize : it's just me having fun with technologies I don't know yet! You can expect ugly code and bad architecture since all of this has been made in one go ... without a clean design phase.
 
 Moreover it's only been tested with **Google Chrome - Version 59.0.3071.115 (64-bit)** and **Firefox - Version 54.0**, running on **macOS 10.12**.
 
