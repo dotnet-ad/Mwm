@@ -13,39 +13,11 @@ Moreover it's only been tested with **Google Chrome - Version 59.0.3071.115 (64-
 **Counter.xaml**
 
 ```xaml
-<Page
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    x:Class="Mwm.Sample.Counter">
-    <StackPanel Margin="10">
-        <TextBlock x:Name="title" Margin="10" Text="Count: 0"  />
-        <Button Margin="10" Text="+1" Click="Add" />
-    </StackPanel>
-</Page>
 ```
 
 **Counter.xaml.cs**
 
 ```csharp
-namespace Mwm.Sample
-{
-	using System;
-
-	public partial class Counter
-	{
-		public Counter()
-		{
-			this.Initialize();
-		}
-
-		private int count;
-
-		private void Add(object sender, EventArgs args)
-		{
-			this.title.Text = $"Count: {++count}";
-		}
-	}
-}
 ```
 
 **Startup.cs**
@@ -74,9 +46,6 @@ public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerF
 - [X] XAML
 	- [X] Generation 
 - [ ] UI 
-	- [ ] Styles
-		- [ ] ResourceDictionaries
-		- [ ] Style & setter 
 	- [ ] Bindings
 		- [X] One way 
 		- [X] Two way 

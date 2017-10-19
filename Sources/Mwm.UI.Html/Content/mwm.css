@@ -1,0 +1,49 @@
+﻿@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+html, body {
+    margin: 0px;
+    padding: 0px;
+    font-family: sans-serif;
+}
+
+div {
+    overflow: hidden;
+}
+
+.Panel {
+    display: flex;
+    justify-content: flex-start;
+    align-items: stretch;
+    flex-direction: column;
+    flex-wrap: nowrap;
+}
+
+.Image {
+    background-size: cover;
+    background-position: center;
+}
+
+.Button {
+    padding: 5px;
+    border-style: solid;
+}
+
+.TextBox {
+    border-style: solid;
+}
+
+.ProgressRing div {
+    border-radius: 50%;
+    animation: spin 1s infinite linear;
+    width: 26px;
+    height: 26px;
+    border: .25rem solid #000000;
+}

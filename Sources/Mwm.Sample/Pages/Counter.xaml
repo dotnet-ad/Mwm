@@ -1,0 +1,9 @@
+﻿<Page
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    x:Class="Mwm.Sample.Counter">
+    <StackPanel Margin="10">
+        <TextBlock x:Name="title" Margin="10" Text="Count: 0"  />
+        <Button Margin="10" Text="+1" Click="Add" />
+    </StackPanel>
+</Page>
