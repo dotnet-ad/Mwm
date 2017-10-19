@@ -11,5 +11,6 @@
     <Folder Include="Elements\Display\" />
     <Folder Include="Elements\Controls\" />
     <Folder Include="Bindings\" />
+    <Folder Include="Elements\Resources\" />
   </ItemGroup>
 </Project>

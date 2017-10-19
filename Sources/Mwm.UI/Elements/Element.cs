@@ -3,6 +3,7 @@
 	using System;
 	using System.Collections.Generic;
 	using System.ComponentModel;
+	using System.Reflection;
 	using System.Runtime.CompilerServices;
 
 	public abstract class Element : IElement
@@ -117,6 +118,10 @@
 			set => this.parent = value != null ? new WeakReference<IElement>(value) : null; 
 		}
 
+		private Dictionary<PropertyInfo, object> attachedProperties = new Dictionary<PropertyInfo, object>();
+
+		public IDictionary<PropertyInfo, object> AttachedProperties => attachedProperties;
+
 		#endregion
 
 		#region Observable
@@ -169,6 +174,32 @@
 			{
 				binding.Dispose();
 			}
+		}
+
+		public void SetAttachedProperty(PropertyInfo info, object value)
+		{
+			this.attachedProperties.Add(info, value);
+		}
+
+		public object GetAttachedProperty(PropertyInfo info)
+		{
+			if(this.attachedProperties.TryGetValue(info, out object v))
+			{
+				return v;
+			}
+
+			return info.GetValue(null);
+		}
+
+		public static PropertyInfo FindAttachedProperty<T>(string name)
+		{
+			return FindAttachedProperty(typeof(T), name);
+		}
+
+		public static PropertyInfo FindAttachedProperty(Type t, string name)
+		{
+			var attachedType = t.GetTypeInfo().GetDeclaredNestedType("Attached");
+			return attachedType.AsType().GetRuntimeProperty(name);
 		}
 
 		#endregion

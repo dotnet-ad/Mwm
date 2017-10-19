@@ -20,6 +20,12 @@
 
         <TextBlock Margin="10,40,10,10" Text="TextBox:" FontSize="16" Foreground="#333333" />
         <TextBox Margin="10" PlaceholderText="Enter a text value" BorderThickness="2" BorderColor="#EEEEEE" />
+
+        <TextBlock Margin="10,40,10,10" Text="ToggleSwitch:" FontSize="16" Foreground="#333333" />
+        <ToggleSwitch Margin="10" />
+
+        <TextBlock Margin="10,40,10,10" Text="Slider:" FontSize="16" Foreground="#333333" />
+        <Slider Margin="10" />
 		
         <TextBlock Margin="10,40,10,10" Text="Button:" FontSize="16" Foreground="#FFFFFF" Background="#08A6F0" />
         <Button Margin="10" Text="Click me!" />
@@ -39,5 +45,26 @@
             <Rectangle Margin="10" HorizontalAlignment="Center" Height="20" Width="20" Background="#DDDDDD" />
             <Rectangle Margin="10" HorizontalAlignment="End" Height="20" Width="20" Background="#EEEEEE" />
         </StackPanel>
+
+		<!--
+        <TextBlock Margin="10,40,10,10" Text="Grid:" FontSize="16" Foreground="#333333" />
+        <Grid Height="50">
+			<Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="*" />
+			</Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="2*" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Rectangle Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="10" Width="20" Background="#BBBBBB" />
+            <Rectangle Grid.Row="1" Grid.Column="0" Grid.RowSpan="2" Margin="10" Height="20" Width="20" Background="#CCCCCC" />
+            <Rectangle Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Margin="10" Height="20" Width="20" Background="#DDDDDD" />
+            <Rectangle Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Margin="10" Height="20" Width="20" Background="#EEEEEE" />
+        </Grid>
+		-->
+		
     </StackPanel>
 </Page>

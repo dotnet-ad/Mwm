@@ -28,6 +28,19 @@
 
 			public StringBuilder InitializeBody { get; set; } = new StringBuilder();
 
+			private Dictionary<string, Tuple<string,string>> attached = new Dictionary<string,Tuple<string,string>>();
+
+			public string GetAttachedPropertyIdentifier(Type owner, string name)
+			{
+				if (attached.TryGetValue(name, out Tuple<string, string> result))
+				   return result.Item1;
+				
+				var splits = name.Trim().Split('.');
+				var res = new Tuple<string, string>($"attached_{attached.Count}", $"Element.FindAttachedProperty<{owner.FullName}>(\"{splits[1]}\"); // {name}");
+				attached[name] = res;
+				return res.Item1;
+			}
+
 			public override string ToString()
 			{
 				var builder = new StringBuilder();
@@ -63,6 +76,16 @@
 					}
 				}
 
+				if(this.attached.Count > 0)
+				{
+					builder.AppendLine();
+					builder.AppendLine("    // Attached properties");
+					foreach (var ap in attached)
+					{
+						builder.AppendLine($"private static readonly {ap.Value.Item1} = {ap.Value.Item2}");
+					}
+				}
+
 				builder.AppendLine();
 				builder.AppendLine("    protected void Initialize()");
 				builder.AppendLine("    {");
@@ -87,15 +110,12 @@
 
 		#region Attributes
 
-		private string GenerateAttributeValue(Type type, XAttribute att)
-		{
-			var property = type.GetRuntimeProperty(att.Name.LocalName);
+	
 
-			if (property == null)
-				return null;
+		private string GenerateAttributeValue(Type ptype, XAttribute att)
+		{
 
 			var value = att.Value;
-			var ptype = property.PropertyType;
 
 			if (ptype == typeof(string))
 			{
@@ -127,33 +147,74 @@
 			throw new InvalidOperationException($"Can't parse attribute of type {ptype}");
 		}
 
-		private string GenerateAttribute(string parentId, Type type, XAttribute att)
+		private void GenerateAttributeAttachedProperty(GeneratedResult result, string parentId, Type type, XAttribute att)
 		{
-			var value = GenerateAttributeValue(type, att);
+			var splits = att.Name.LocalName.Trim().Split('.');
 
-			if (!string.IsNullOrEmpty(value))
+			var ownerType = this.FindType(splits[0]);
+			var property = Element.FindAttachedProperty(ownerType,splits[1]);
+
+			var attachedId = result.GetAttachedPropertyIdentifier(ownerType, att.Name.LocalName);
+			var value = GenerateAttributeValue(property.PropertyType, att);
+			result.InitializeBody.AppendLine($"      {parentId}.SetAttachedProperty({attachedId}, {value});");
+		}
+
+		private void GenerateAttribute(GeneratedResult result, string parentId, Type type, XAttribute att)
+		{
+			// Attached property
+			if (att.Name.LocalName.Contains('.'))
 			{
-				return $"      {parentId}.{att.Name.LocalName} = {value};";
+				GenerateAttributeAttachedProperty(result, parentId, type, att);
+				return;
 			}
 
-			var e = type.GetRuntimeEvent(att.Name.LocalName);
+			// Property
+			var property = type.GetRuntimeProperty(att.Name.LocalName);
+			if (property != null)
+			{
+				var value = GenerateAttributeValue(property.PropertyType, att);
+				result.InitializeBody.AppendLine($"      {parentId}.{att.Name.LocalName} = {value};");
+				return;
+			}
 
+			// Events
+			var e = type.GetRuntimeEvent(att.Name.LocalName);
 			if (e != null)
 			{
-				return $"      {parentId}.{att.Name.LocalName} += {att.Value};";
+				result.InitializeBody.Append($"      {parentId}.{att.Name.LocalName} += {att.Value};");
+				return;
 			}
 
-			return null;
+		}
 
+		private void GeneratePropertyNode(GeneratedResult result, string parentId, Type type, XElement att)
+		{
+			var splits = att.Name.LocalName.Trim().Split('.');
+			if (this.FindType(splits[0]) != type)
+				throw new InvalidOperationException($"The property's type must be {type.FullName}");
+			
+			var property = type.GetRuntimeProperty(att.Name.LocalName);
+			if (property != null)
+			{
+				var value = GenerateAttributeValue(property.PropertyType, att);
+				result.InitializeBody.AppendLine($"      {parentId}.{att.Name.LocalName} = {value};");
+				return;
+			}
 		}
 
 		#endregion
 
 		#region Nodes
 
+		private Type FindType(string name)
+		{
+			return Type.GetType($"Mwm.UI.{name}, Mwm.UI");
+		}
+
+
 		private string GenerateNode(GeneratedResult result, XElement xml, bool isRoot)
 		{
-			var type = Type.GetType($"Mwm.UI.{xml.Name.LocalName}, Mwm.UI");
+			var type = FindType(xml.Name.LocalName);
 
 			string id;
 			if (isRoot)
@@ -172,15 +233,13 @@
 			// Attributes
 			foreach (var attribute in xml.Attributes())
 			{
-				var lines = GenerateAttribute(id, type, attribute);
-				if (lines != null)
-					result.InitializeBody.AppendLine(lines);
+				GenerateAttribute(result, id, type, attribute);
 			}
 
 			// Panel's children
 			if (typeof(IPanel).GetTypeInfo().IsAssignableFrom(type.GetTypeInfo()))
 			{
-				foreach (var child in xml.Elements())
+				foreach (var child in xml.Elements().Where(x => !x.Name.LocalName.Contains(".")))
 				{
 					var childid = GenerateNode(result, child, false);
 					result.InitializeBody.AppendLine($"      {id}.AddChild({childid});");
@@ -188,8 +247,14 @@
 			}
 			else if (typeof(Page).GetTypeInfo().IsAssignableFrom(type.GetTypeInfo()))
 			{
-				var childid = GenerateNode(result, xml.Elements().First(), false);
+				var childid = GenerateNode(result, xml.Elements().Where(x => !x.Name.LocalName.Contains(".")).First(), false);
 				result.InitializeBody.AppendLine($"      {id}.Content = {childid};");
+			}
+
+			// Property nodes
+			foreach (var child in xml.Elements().Where(x => x.Name.LocalName.Contains(".")))
+			{
+				GeneratePropertyNode(result, id, type, child);
 			}
 
 			// Field

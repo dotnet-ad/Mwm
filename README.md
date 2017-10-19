@@ -6,17 +6,21 @@ Build web interfaces with XAML markup language and bind it to the same view mode
 
 **Mwm** is purely **experimental**. It's absolutely not thought to be production-ready, this is more a proof-of-concept of a naïve implementation on top of [ASP.NET Core](https://www.asp.net/core/overview/aspnet-vnext) and [Websockets](https://developer.mozilla.org/fr/docs/WebSockets).
 
-Moreover it's only been tested with **Google Chrome - Version 59.0.3071.115 (64-bit)**, running on **macOS 10.12**.
+It's just me having fun with technologies I don't know yet! :)
+
+Moreover it's only been tested with **Google Chrome - Version 59.0.3071.115 (64-bit)** and **Firefox - Version 54.0**, running on **macOS 10.12**.
 
 ## Quickstart
 
-**Counter.xaml**
+![](Documentation/Counter.png)
+
+**Home.xaml**
 
 ```xaml
 <Page
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    x:Class="Mwm.Sample.Counter">
+    x:Class="Mwm.Sample.Home">
     <StackPanel Margin="10">
         <TextBlock x:Name="title" Margin="10" Text="Count: 0"  />
         <Button Margin="10" Text="+1" Click="Add" />
@@ -24,14 +28,14 @@ Moreover it's only been tested with **Google Chrome - Version 59.0.3071.115 (64-
 </Page>
 ```
 
-**Counter.xaml.cs**
+**Home.xaml.cs**
 
 ```csharp
 namespace Mwm.Sample
 {
 	using System;
 
-	public partial class Counter
+	public partial class Home
 	{
 		public Counter()
 		{
@@ -58,13 +62,36 @@ public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerF
 	app.UseWebSockets();
 	app.UseMwm(new MwmOptions
 	{
-		UIBuilder = new FactoryBuilder().Register<Counter>(),
+		UIBuilder = new FactoryBuilder().Register<Home>(),
 	});
 }
 ```
 
+## Samples
+
+Clone the repository and start the Mwm.Sample project to preview three samples :
+
+* **Counter** : the quickstart with a simple web page interracting with the .NET backend.
+
+![](Documentation/Counter.png)
+
+* **Controls** : the list of available controls.
+
+![](Documentation/Controls.png)
+
+![](Documentation/Controls2.png)
+
+* **Weather (WIP)** : an example of a weather application based on MVVM architecture.
+
+*screenshot soon ...*
+
 ## Roadmap
 
+- [ ] Improvements
+	- [ ] Integrate Typescript
+	- [ ] Integrate SignalR
+	- [ ] Cleaner architecture  
+	- [ ] Better browser compatibility
 - [X] Middleware
 	- [X] Sending property changes
 	- [X] Receiving events
@@ -74,6 +101,7 @@ public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerF
 - [X] XAML
 	- [X] Generation 
 - [ ] UI 
+	- [ ] User controls 
 	- [ ] Styles
 		- [ ] ResourceDictionaries
 		- [ ] Style & setter 
@@ -102,7 +130,6 @@ public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerF
 		- [ ] ScrollView
 	- [ ] Virtualization
 		- [ ] ListView
-	- [ ] Migrate to Typescript
 
 ## How it works
 
@@ -114,7 +141,7 @@ All the logic is executed by an ASP.NET Core middleware that sends and listen to
 
 #### Components & XAML Generation
 
-The components and the generation are very basic at the moment. Theorically, the same concept should be applyable to *Xamarin.Forms* but with a lot more work. :)
+A custom simplified XAML layer have been built from ground up for control. The components and the generation are very basic at the moment. All XAML will generate C# file at build time. Theorically, the same concept should be applyable to *Xamarin.Forms* but with a lot more work. :)
 
 **Details** : [Mwm.UI](Mwm.UI), [Mwm.UI.Xaml.Build](Mwm.UI.Xaml.Build)
 
