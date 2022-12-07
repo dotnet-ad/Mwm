@@ -8,7 +8,7 @@
     <ProjectReference Include="..\Mwm.UI\Mwm.UI.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Json\" />
